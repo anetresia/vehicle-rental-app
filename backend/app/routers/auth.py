@@ -1,16 +1,17 @@
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from app.auth.security import (
+from backend.app.auth.security import (
     create_access_token,
     hash_password,
     verify_password,
 )
-from app.database import get_db
-from app.models.user import User
-from app.schemas.auth import TokenResponse
-from app.schemas.user import UserCreate, UserResponse
+from backend.app.database import get_db
+from backend.app.models.user import User
+from backend.app.schemas.auth import TokenResponse
+from backend.app.schemas.user import UserCreate, UserResponse
 
 
 router = APIRouter(
@@ -31,6 +32,7 @@ def register(
     user_data: UserCreate,
     db: Session = Depends(get_db)
 ):
+    # Email already registered-aa check pannrom
     existing_user = db.query(User).filter(
         User.email == user_data.email
     ).first()
@@ -41,6 +43,7 @@ def register(
             detail="Email already registered"
         )
 
+    # New customer create pannrom
     new_user = User(
         full_name=user_data.full_name,
         email=user_data.email,
@@ -68,16 +71,19 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
+    # OAuth2PasswordRequestForm-la email username field-la varum
     user = db.query(User).filter(
         User.email == form_data.username
     ).first()
 
+    # User illa na error
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password"
         )
 
+    # Password correct-aa check pannrom
     if not verify_password(
         form_data.password,
         user.hashed_password
@@ -87,12 +93,14 @@ def login(
             detail="Invalid email or password"
         )
 
+    # Account active-aa check pannrom
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Account is inactive"
         )
 
+    # JWT access token create pannrom
     access_token = create_access_token(
         user_id=user.id,
         role=user.role

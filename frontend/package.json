@@ -1,0 +1,22 @@
+{
+  "name": "vehicle-rental-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix react run dev",
+    "build": "npm --prefix react run build",
+    "lint": "npm --prefix react run lint",
+    "preview": "npm --prefix react run preview"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.2",
+    "vite": "^7.1.7"
+  }
+}

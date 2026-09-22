@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.routers import auth, user, vehicle, booking
+from backend.app.routers import auth, user, vehicle, booking, dashboard
 
 
 app = FastAPI(
@@ -44,6 +44,10 @@ app.include_router(
     prefix="/api"
 )
 
+app.include_router(
+    dashboard.router,
+    prefix="/api"
+)
 
 @app.get("/")
 def root():
